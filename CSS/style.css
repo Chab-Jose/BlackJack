@@ -1,0 +1,15 @@
+body{
+    background-color: rgb(65, 161, 65);
+}
+
+img{
+    width: 200px;
+    margin-left: -130px;
+    position: relative;
+    left: 150px;
+
+}
+
+#jugador, #computadora{
+    min-height: 210px;
+}

@@ -2,12 +2,14 @@
 let baraja = [];
 let carta = '';
 let puntosJugador = 0;
+let puntosComputadora = 0;
 const numeros = [2,3,4,5,6,7,8,9,10];
 const letras = ['J','Q','K','A'];
 const palo = ['C','D','H','S'];
 
 
 //-------Funciones------------- 
+
 function CrearBaraja(){
 baraja =[];
 for(n of numeros){
@@ -31,8 +33,15 @@ function nuevoJuego() {
     puntosJugador = 0;
     $('#puntosJugador').text(puntosJugador);
 
+    $('#cartasComputadora').html('');
+    puntosComputadora = 0;
+    $('#puntosComputadora').text(puntosJugador);
+
     $('#btn-card').removeClass('disabled');
     $('#btn-stop').removeClass('disabled');
+    $('#mensajeGanador').attr('hidden', 'true');
+    $('#mensajeGanador').removeClass('bg-danger');
+    $('#mensajeGanador').removeClass('bg-info');
     console.clear();
     CrearBaraja();
 }
@@ -46,7 +55,6 @@ function pedirCarta(){
 
 function sumarPuntos(carta) {
     let puntos = 0;
-    console.log(carta);
 
     let valorCarta = carta.slice(0, -1);
     if (letras.includes(valorCarta)){
@@ -54,15 +62,64 @@ function sumarPuntos(carta) {
     }else{
         puntos = valorCarta * 1;
     }
-    puntosJugador +=puntos;
-    $('#puntosJugador').text(puntosJugador);
+    return puntos;
+}
+
+function cartaComputadora() {
+    //Sacamos carta
+    let carta = baraja.shift();
+    const cartaHtml = $('#cartasComputadora').html() + `<img src="/cartas/${carta}.png" alt="">`;
+//Se suma los puntos
+    puntosComputadora += sumarPuntos(carta);
+//Se visualiza en en la pagina
+$('#cartasComputadora').html(cartaHtml);
+$('#puntosComputadora').text(puntosComputadora);
+
+return puntosComputadora;
 }
 
 function turnoComputadora() {
     $('#btn-card').addClass('disabled');
     $('#btn-stop').addClass('disabled');
-    console.log('Turno de la computadora')
+    console.log('Turno de la computadora');
 
+    const ciclo = setInterval(() =>{
+        cartaComputadora();
+        if(puntosJugador > 21){
+            clearInterval(ciclo);
+            finTurnoComputadora();
+        }
+        if(puntosComputadora > 21 || puntosComputadora >= puntosJugador){
+            clearInterval(ciclo);
+            finTurnoComputadora();   
+        } 
+    }, 500);
+    console.log('Fin del turno de la computadora');
+    return;
+}
+
+function finTurnoComputadora(){
+    setTimeout(() => {
+        mensajeGanador(
+            (puntosComputadora <= 21 && puntosComputadora >= puntosJugador ) || puntosJugador > 21
+        ?(ganador = {
+            nombre : 'La Computadora gana',
+            color  : 'bg-danger',
+        })
+        : (ganador = {
+            nombre : 'El Jugador gana',
+            color  : 'bg-info',
+        })
+        )
+    }, 500)
+}
+    
+function mensajeGanador({nombre, color}) {
+    console.log(nombre);
+   $('#mensajeGanador').removeAttr('hidden');
+   $('#mensajeGanador').html(`<h2> ${nombre}</h2>`);
+   $('#mensajeGanador').addClass(color);
+    
 }
 
 //------Botones-----------------
@@ -71,19 +128,18 @@ $('#btn-new').click(function(){
 })
 
 $('#btn-card').click(function(){
-    
     let carta = pedirCarta();
-    sumarPuntos(carta);
+    puntosJugador += sumarPuntos(carta);
+    $('#puntosJugador').text(puntosJugador);
 
     if (puntosJugador > 21) {
-        console.log('El jugador perdio');
         turnoComputadora()  
-    }
-    
+    } 
 })
 
 $('#btn-stop').click(function(){
     turnoComputadora();
+    
 })
 
 ////Inicia el juego///////////////////////

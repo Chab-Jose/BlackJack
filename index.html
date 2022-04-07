@@ -12,9 +12,9 @@
 <body>
     <div class="container-fluid bg-dark text-white text-center p-3"><h1>Black Jack</h1></div>
     <div class="container text-center my-4"> 
-        <button id = "btn-new"class="btn-primary ms-1 disabled">Nuevo Juego</button>
-        <button id="btn-card" class="btn-primary ms-1">Pedir Carta</button>
-        <button id="btn-stop" class="btn-danger ms-1">Detenerse</button>
+        <button id = "btn-new"class="btn btn-primary ms-1">Nuevo Juego</button>
+        <button id="btn-card" class="btn btn-primary ms-1">Pedir Carta</button>
+        <button id="btn-stop" class="btn btn-danger ms-1">Detenerse</button>
     </div>
     <div class ="container my-5">
         <div id="jugador" class="row my-5">
@@ -32,8 +32,10 @@
            <div id="cartasComputadora"class="col-12">
 
             </div>
-        </div>
-        
+            <div id="mensajeGanador" hidden>
+                <h2>Hay un ganador</h2>
+            </div>
+        </div>  
     </div>
  <script src="/scrip/jquery-3.6.0.min.js"></script>
  <script src="https://cdn.jsdelivr.net/npm/underscore@1.13.2/underscore-umd-min.js"></script>
